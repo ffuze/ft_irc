@@ -1,61 +1,83 @@
-
-//For Alessandro: all this stuff is a functional part of commands (see commands.hpp - this part for NAT and LEO)
-// We have 3 category of users: regular members, operators (members who can do more, to execute some of commands) 
-//and that ones who was invited
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Channel.hpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alek <alek@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/27 18:01:54 by alek              #+#    #+#             */
+/*   Updated: 2026/03/28 16:53:26 by alek             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
+
 #include <string>
 #include <set>
 #include <map>
 #include "Client.hpp"
 
 class Channel {
-private:
-	std::string _name;
-	std::string _topic; //command TOPIC
+    private:
+        std::string _name;
+        std::string _topic; //command TOPIC
 
-	//"Databases":
-	std::map<std::string, Client*> _members; //needs for JOIN, PART,KICK,QUIT, PRIVMSG
-	std::map<std::string, Client*> _operators; //needs to check operator rights for KICK, INVITE, TOPIC, MODE
-	std::set<std::string> _invited; // to keep nicknames. Needs for INVTE, JOIN (if mode +i);
+        //"Databases":
+        std::map<std::string, Client*> _members;
+        std::map<std::string, Client*> _operators;
+        std::set<std::string> _invited;
 
+        //Modes:
+        bool _invite_only;     // mode i (invite-only)
+        bool _top_restricted;  // mode t (topic restricted to operators)
+        std::string _key;      // mode k (channel password)
+        int _user_limit;       // mode l (user limit, -1 if no limit)
 
-	//Modes from subject:
-	bool _invite_only; // mode i: invite-only channel
-	bool _top_restricted; //mode t: just operator can change TOPIC
-	std::string _key; // mode k: channel password
-	int _user_limit; //mode l: limit of clients
+    public:
 
-public:
-	Channel(const std::string &name);//creates channel with name
+        Channel(const std::string &name);
+        ~Channel();
 
-	//Actions with members (for JOIN, PART, KICK, OUT)
-	void addMember(Client *client);
-	void removeMember(Client *client);
-	bool isMember(Client *client);
+        // member management
+        void addMember(Client *client);
+        void removeMember(Client *client);
+        bool isMember(Client *client) const;
 
-	//Actions with Operators (need to check the rights for commands and for MODE +o / -o)
-	void addOperator(Client *client);
-	void removeOperator(Client *client);
-	bool isOperator(Client *client) const;
+        // operator management
+        void addOperator(Client *client);
+        void removeOperator(Client *client);
+        bool isOperator(Client *client) const;
 
-	//Invites control (needs for INVITe and Join if mode +i)
-	void addInvited(std::string &nickname);
-	bool isInvited(std::string &nickname);
+        // inviting methods
+        void addInvited(const std::string &nickname);
+        void removeInvited(const std::string &nickname);
+        bool isInvited(const std::string &nickname) const;
 
-	//send message to all members of channel
-	void broadcast(const std::string *message);
+        // broadcasting (general)
+        void broadcast(const std::string &message);
 
-	//Getters for commands
-	//......
+        //broadcasting (except exclude)
+        void broadcast(const std::string &message, Client *exclude);
 
-	//Setter and bool checkerss for Modes:
-	// i - invite only
-	// t - topic restricted to operators
-	// k - channel key
-	// l - user limits
+        // get() methods
+        const std::string& getName() const;
+        const std::string& getTopic() const;
+        const std::string& getKey() const;
+        int getUserLimit() const;
+        size_t getMemberCount() const;
+        const std::map<std::string, Client*>& getMembers() const;
+
+        // set() methods
+        void setTopic(const std::string &topic);
+        void setKey(const std::string &key);
+        void setUserLimit(int limit);
+        
+        bool isInviteOnly() const;
+        void setInviteOnly(bool value);
+
+        bool isTopicRestricted() const;
+        void setTopicRestricted(bool value);
 };
-
 
 #endif

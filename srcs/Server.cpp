@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nakoriko <nakoriko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alek <alek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 12:27:39 by nakoriko          #+#    #+#             */
-/*   Updated: 2026/03/25 15:30:29 by nakoriko         ###   ########.fr       */
+/*   Updated: 2026/03/27 18:15:02 by alek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,3 +50,4 @@ Server::Server (int port, std::string password) : _port(port), _password(passwor
 // 	// 		}
 // 	// 	}
 // 	// }
+// 
