@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nakoriko <nakoriko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: adegl-in <adegl-in@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 12:27:39 by nakoriko          #+#    #+#             */
-/*   Updated: 2026/04/01 19:10:04 by nakoriko         ###   ########.fr       */
+/*   Updated: 2026/04/02 20:46:51 by adegl-in         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,15 @@
 #include <unistd.h>
 #include <errno.h>
 #include <iostream>
+#include <algorithm>
+#include <cctype>
+
+// Helper function for case-insensitive string comparison
+static std::string toLower(const std::string &str) {
+	std::string result = str;
+	std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+	return result;
+}
 
 
 
@@ -157,10 +166,10 @@ void Server::removeClient(int fd) {
 		return ;
 	Client *client = it->second;
 //1. Bisogna di eliminare anche da tutti i canali, in quale e presente
-	// for (std::map<std::string, Channel*>::iterator chan_it = _channels.begin();
-	// 	chan_it != _channels.end(); chan_it++) {
-	// 		chan_it->second->removeMember(client); //Channel.cpp
-	//}
+	for (std::map<std::string, Channel*>::iterator chan_it = _channels.begin();
+		chan_it != _channels.end(); chan_it++) {
+			chan_it->second->removeMember(client); //Channel.cpp
+	}
 //2. Dal polfds
 	for(size_t i = 0; i < _pollfds.size(); i++) {
 		if(_pollfds[i].fd == fd) {
@@ -227,9 +236,9 @@ void Server::handleClientWrite(int fd) {
 }
 
 Client* Server::getClient(const std::string &nick) {
-	
+	std::string nickLower = toLower(nick);
 	for(std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++) {
-		if(it->second->getNickname() == nick)
+		if(toLower(it->second->getNickname()) == nickLower)
 			return it->second;
 	} 
 	return NULL;
@@ -252,17 +261,22 @@ std::string Server::getPassword() const {
 }
 
 bool Server::isNickTaken(const std::string &nick) {
+	std::string nickLower = toLower(nick);
 	for (std::map<int, Client*>::iterator it  = _clients.begin(); it != _clients.end(); it++) {
-		if(it->second->getNickname() == nick)
+		if(toLower(it->second->getNickname()) == nickLower)
 			return true;
 	}
 	return false;
 }
 
 void Server::checkRegistration(Client &client) {
+	// std::cout << "DEBUG checkRegistration: passChecked=" << client.isPassChecked() 
+	// 	<< " nick='" << client.getNickname() << "' user='" << client.getUsername() << "'" << std::endl;
+	
 	if(client.isPassChecked() && !client.getNickname().empty() && !client.getUsername().empty()) 
 	{
 		client.setRegistered(true);
+		// std::cout << "DEBUG: Client registered! Sending welcome message..." << std::endl;
 		client.sendMessage(":server 001 " + client.getNickname() + " :Welcome to the IRC server\r\n");
 	}
 }

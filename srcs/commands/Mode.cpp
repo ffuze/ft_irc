@@ -68,8 +68,7 @@ void cmd_mode (Server &server, Client &client, const std::vector<std::string> &p
 	//controllo, che ec'e il canale dentro taarget
 	std::string target = params[0];
 	if(target[0] != '#') {
-		client.sendMessage("501 " + client.getNickname() + " MODE :Unknown MODE flag\r\n");
-		return ;
+		return;
 	}
 
 	Channel *channel = server.getChannel(target);
