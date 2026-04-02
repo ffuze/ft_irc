@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alek <alek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: nakoriko <nakoriko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 12:27:39 by nakoriko          #+#    #+#             */
-/*   Updated: 2026/04/02 03:02:19 by alek             ###   ########.fr       */
+/*   Updated: 2026/04/01 19:10:04 by nakoriko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ Server::Server (int port, std::string password) : _port(port), _password(passwor
 	pfd.events = POLLIN; //solo ascoltiamo, perche il server socket fd solo acceta connesioni, non manda i dati. POLLOUT non serve
 	pfd.revents = 0; //valore iniziale
 	_pollfds.push_back(pfd); // push dentro nostro vector di pollfds
-	std::cout << "Server flawlessly started on port " << port << std::endl;
+
 }
 
 
@@ -124,8 +124,6 @@ void Server::acceptNewClient() {
 	// NON blockin - fcntl() serve per far funzionare poll(), senza aspettare accept(), recv() e send()
 	fcntl(client_fd, F_SETFL, O_NONBLOCK);
 
-	std::cout << "[+] New client connected (fd: " << client_fd << ")" << std::endl;
-
 //3. Creamo un ogeto di cliente con il sup fd
 	Client* client = new Client(client_fd);
 	
@@ -159,10 +157,10 @@ void Server::removeClient(int fd) {
 		return ;
 	Client *client = it->second;
 //1. Bisogna di eliminare anche da tutti i canali, in quale e presente
-	for (std::map<std::string, Channel*>::iterator chan_it = _channels.begin();
-		chan_it != _channels.end(); chan_it++) {
-			chan_it->second->removeMember(client); //Channel.cpp
-	}
+	// for (std::map<std::string, Channel*>::iterator chan_it = _channels.begin();
+	// 	chan_it != _channels.end(); chan_it++) {
+	// 		chan_it->second->removeMember(client); //Channel.cpp
+	//}
 //2. Dal polfds
 	for(size_t i = 0; i < _pollfds.size(); i++) {
 		if(_pollfds[i].fd == fd) {
@@ -208,7 +206,8 @@ void Server::handleClientRead(int fd) {
 
 //4. Elaboriamo (eseguiamo) ogni messaggio
 	while(client->hasPendingMessage()) {
-		std::string msg = client->getNextMessage();		std::cout << "[MSG] " << client->getNickname() << ": " << msg << std::endl;		//La magia di eseguzione viene fatta qui:
+		std::string msg = client->getNextMessage();
+		//La magia di eseguzione viene fatta qui:
 		CommandHandler::execute(*this, *client, msg); 
 	}
 }
