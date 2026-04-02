@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nakoriko <nakoriko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alek <alek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 16:51:18 by nakoriko          #+#    #+#             */
 /*   Updated: 2026/03/31 18:00:35 by nakoriko         ###   ########.fr       */
