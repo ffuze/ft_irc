@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nakoriko <nakoriko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: adegl-in <adegl-in@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 14:40:10 by nakoriko          #+#    #+#             */
-/*   Updated: 2026/03/30 18:02:58 by nakoriko         ###   ########.fr       */
+/*   Updated: 2026/04/02 20:47:52 by adegl-in         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ class Server;
 class Client;
 #include <string>
 #include <vector>
+#include <algorithm>
 
 //prototipo uguale per tutti i commandi:
 // Server, Client, vector di strings params, string trailing("messaggio"); 
@@ -28,11 +29,13 @@ void cmd_pass (Server &server, Client &client, const std::vector<std::string> &p
 void cmd_user (Server &server, Client &client, const std::vector<std::string> &params, const std::string &trailing);
 void cmd_quit (Server &server, Client &client, const std::vector<std::string> &params, const std::string &trailing);
 void cmd_ping (Server &server, Client &client, const std::vector<std::string> &params, const std::string &trailing);
+// void cmd_cap (Server &server, Client &client, const std::vector<std::string> &params, const std::string &trailing);
 
 //NAT (basic channel commands)
 void cmd_join (Server &server, Client &client, const std::vector<std::string> &params, const std::string &trailing);
 void cmd_part (Server &server, Client &client, const std::vector<std::string> &params, const std::string &trailing);
 void cmd_privmsg (Server &server, Client &client, const std::vector<std::string> &params, const std::string &trailing);
+void cmd_notice(Server &server, Client &client, const std::vector<std::string> &params, const std::string &trailing);
 
 //LEO (operator commands)
 void cmd_invite (Server &server, Client &client, const std::vector<std::string> &params, const std::string &trailing);
