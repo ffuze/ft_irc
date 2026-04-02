@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nakoriko <nakoriko@student.42.fr>          +#+  +:+       +#+         #
+#    By: adegl-in <adegl-in@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/25 10:30:33 by nakoriko          #+#    #+#              #
-#    Updated: 2026/04/01 13:10:23 by nakoriko         ###   ########.fr        #
+#    Updated: 2026/04/02 20:58:27 by adegl-in         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = ircserv
 SRCS = srcs/main.cpp srcs/Server.cpp srcs/Client.cpp srcs/CommandHandler.cpp \
 		srcs/commands/Join.cpp  srcs/commands/Nick.cpp srcs/commands/Part.cpp \
 		srcs/commands/Pass.cpp srcs/commands/Ping.cpp srcs/commands/PrivMsg.cpp \
-		srcs/commands/Quit.cpp srcs/commands/User.cpp \
+		srcs/commands/Quit.cpp srcs/commands/User.cpp srcs/commands/Notice.cpp \
 		\
 		srcs/commands/Invite.cpp srcs/commands/Kick.cpp \
 		srcs/commands/Mode.cpp srcs/commands/Topic.cpp \

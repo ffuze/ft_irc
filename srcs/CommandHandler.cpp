@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nakoriko <nakoriko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: adegl-in <adegl-in@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 16:41:09 by nakoriko          #+#    #+#             */
-/*   Updated: 2026/04/02 16:30:38 by nakoriko         ###   ########.fr       */
+/*   Updated: 2026/04/02 21:11:56 by adegl-in         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,9 +171,7 @@ ParsedCommand CommandHandler::parse(const std::string &row) {
 
 
 void CommandHandler::execute(Server &server, Client &client, const std::string &raw) {
-	// std::cout << "Debug: execute called with : " << raw << std::endl;
 	ParsedCommand cmd = parse(raw); // la struttura
-	// std::cout << "Debug: command: " << cmd.command << std::endl;
 
 	if(cmd.command.empty()) {
 		client.sendMessage("Error: empty command\r\n"); //!cambiare dopo al format di RFC "Error replies"
@@ -190,12 +188,12 @@ void CommandHandler::execute(Server &server, Client &client, const std::string &
 	
 	static bool init = false;
 	if(!init) {
-		//Set commands map (str + void)
 		commands["INVITE"] = cmd_invite;
 		commands["JOIN"] = cmd_join;
 		commands["KICK"] = cmd_kick;
 		commands["MODE"] = cmd_mode;
 		commands["NICK"] = cmd_nick;
+		commands["NOTICE"] = cmd_notice;
 		commands["PART"] = cmd_part;
 		commands["PASS"] = cmd_pass;
 		commands["PING"] = cmd_ping;
@@ -210,8 +208,7 @@ void CommandHandler::execute(Server &server, Client &client, const std::string &
 	std::map<std::string, void(*)(Server&, Client&, const std::vector<std::string>&, 
 		const std::string&)>::iterator it = commands.find(cmd.command);
 	if(it == commands.end()) {
-		client.sendMessage("Error: invalid command\r\n");//!eliminare quando isValidCommand sara finito
-			return ;
+		return;
 	}
 	//eseguiamo il metodo che corrisponde a "NOME" di commanda dentro la mappa sopra
 	if(it->first != "PASS" && it->first != "NICK" && it->first != "USER") {
