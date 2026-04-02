@@ -6,7 +6,7 @@
 /*   By: adegl-in <adegl-in@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 12:27:39 by nakoriko          #+#    #+#             */
-/*   Updated: 2026/04/02 20:46:51 by adegl-in         ###   ########.fr       */
+/*   Updated: 2026/04/02 21:23:00 by adegl-in         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ Server::Server (int port, std::string password) : _port(port), _password(passwor
 	
 	struct pollfd pfd; // standart structure from poll, we just fill fields,
 	pfd.fd = _server_fd; // identifichiamo il nostro pfd by fd
-	pfd.events = POLLIN; //solo ascoltiamo, perche il server socket fd solo acceta connesioni, non manda i dati. POLLOUT non serve
+	pfd.events = POLLIN | POLLHUP; //solo ascoltiamo, perche il server socket fd solo acceta connesioni, non manda i dati. POLLOUT non serve
 	pfd.revents = 0; //valore iniziale
 	_pollfds.push_back(pfd); // push dentro nostro vector di pollfds
 
@@ -76,13 +76,20 @@ void Server::run() {
 		int fd_count = poll(_pollfds.data(), _pollfds.size(), -1); //data() punta al primo elemento di vector, -1 - aspetta finche non succede qualcosa.  
 		if (fd_count < 0) { //error or signal to stop
 			if(errno == EINTR) // k di variabile globale errno. Se EINTR - chiamata interrota con un signale(CTR+C), possiamo continuare
-				continue;
+			{
+				continue; //<<-----bisogna di aggiungere i controllo di fd, dove e' sucesso per eliminarlo corettamente
+			}
 			break; // se error - usciamo
 		}
 		//se fd_count > 0 - facciamo check di all pollfds, interpretando eventi 
 		for(size_t i = 0; i < _pollfds.size(); i++) {
 			//check di real events (o 1 = POLLIN, o 4 = POLLOUT, o tuti i due)
 			//per questo controlliamo i bit concrete (0 e 2), tramite &;
+			if(_pollfds[i].revents & POLLHUP) {
+				removeClient(_pollfds[i].fd);
+				continue;
+			}
+			
 			if(_pollfds[i].revents & POLLIN) {
 				//se real event su server fd - allora e una richiesta dal client
 				if(_pollfds[i].fd == _server_fd) {
@@ -93,6 +100,7 @@ void Server::run() {
 					handleClientRead(_pollfds[i].fd);
 				}
 			}
+			
 			//POLLOUT - la richiesta dal cliente per invio di dati
 			if(_pollfds[i].revents & POLLOUT) {
 				handleClientWrite(_pollfds[i].fd);
@@ -165,6 +173,7 @@ void Server::removeClient(int fd) {
 	if(it == _clients.end())
 		return ;
 	Client *client = it->second;
+	std::cout <<  "Debug: client:" << client->getNickname() << std::endl;
 //1. Bisogna di eliminare anche da tutti i canali, in quale e presente
 	for (std::map<std::string, Channel*>::iterator chan_it = _channels.begin();
 		chan_it != _channels.end(); chan_it++) {
