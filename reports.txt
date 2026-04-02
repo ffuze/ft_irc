@@ -1,0 +1,37 @@
+1 - Il client puo entrare nel server senza che conosca la password:
+++ Client ++
+alek@DESKTOP-99MPB2L:~/irc$ valgrind nc -C localhost 6676
+==15629== Memcheck, a memory error detector
+==15629== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==15629== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==15629== Command: nc -C localhost 6676
+==15629== 
+NICK alek2
+
+++ Server ++
+[+] New client connected (fd: 5)
+[MSG] : NICK alek2
+
+2 - Comando join non gestisce messaggi dopo il comando da rispettare:
+JOIN #generale --> ok
+JOIN #generale :weeee alekuno --> ai ai ai im your little butterfly
+
+3 - Apparentemente manca il comando NOTICE, come richiesto dalla eval sheet:
+Verify that private messages (PRIVMSG) and notices (NOTICE) are fully
+functional with different parameters.
+
+4 - Supponendo di avere due client, alek1 (operatore) e alek2 (normal), se
+con alek1 do l'operatore ad alek2 col comando "MODE #generale +o alek2"
+, alek2 riceve l'operatore, ma appena provo a ridare i permessi di operatore ad alek1,
+mi dice "441 alek2  #generale :They aren't on that channel", quando in realta' lo e'
+
+5 - non e' presente la @ accanto ai nomi degli operatori
+
+6 - Comando TOPIC leakka (ma viene creato comunque)
+
+
+Stop a client (CTRL+Z) connected on a channel. Then flood teh channel
+using another client. The server should not hang. Whehn the client is live 
+again, all stored commands should be processed normally.
+Also, check for memory leaks during this operation.
+^^ non capisco come testare questa cosa
