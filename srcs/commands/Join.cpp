@@ -6,7 +6,7 @@
 /*   By: nakoriko <nakoriko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 16:33:12 by nakoriko          #+#    #+#             */
-/*   Updated: 2026/04/01 17:44:26 by nakoriko         ###   ########.fr       */
+/*   Updated: 2026/04/02 15:44:41 by nakoriko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,9 @@ void cmd_join (Server &server, Client &client, const std::vector<std::string> &p
 
 //9. Aggiornarre tutti ( a parte client esistente), che c'e un nuovo membro (channel->broadcast())
 	std::string join_msg = ":" + client.getNickname() + " JOIN " + channel_name + "\r\n";
+	if(!trailing.empty()) {
+		join_msg = join_msg + trailing + "\r\n";
+	}
 	channel->broadcast(join_msg, &client); //client stesso escluso
 	client.sendMessage(join_msg);	
 	

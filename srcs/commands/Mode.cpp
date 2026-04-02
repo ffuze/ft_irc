@@ -35,7 +35,7 @@ void handleModeO(Channel *channel, bool adding, const std::string &target, Clien
 	}
 	Client *target_client = server.getClient(nick);
 	if(!target_client || !channel->isMember(target_client)) {
-		client.sendMessage("441 " + client.getNickname() + " " + nick + " " + target + " :They aren't on that channel\r\n");
+		client.sendMessage("441 " + client.getNickname() + " " + nick + " " + target + " :is not on that channel\r\n");
 		return ;
 	}
 	if(adding) {
@@ -63,7 +63,7 @@ void cmd_mode (Server &server, Client &client, const std::vector<std::string> &p
 	//  +k / -k - setKey()
 	//  +o/-o - addOperator()
 	//  +l / -l setUserLimit()
-
+	(void)	trailing;
 	//1. Check se canale (params) esiste
 	if(params.empty()) {
 		client.sendMessage("461 " + client.getNickname() + " MODE :Not enough parameters\r\n");
@@ -72,8 +72,7 @@ void cmd_mode (Server &server, Client &client, const std::vector<std::string> &p
 	//controllo, che ec'e il canale dentro taarget
 	std::string target = params[0];
 	if(target[0] != '#') {
-		client.sendMessage("501 " + client.getNickname() + " MODE :Unknown MODE flag\r\n");
-		return ;
+		return;
 	}
 
 	Channel *channel = server.getChannel(target);
