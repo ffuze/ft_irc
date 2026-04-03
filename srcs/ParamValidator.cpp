@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ParamValidator.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nakoriko <nakoriko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: adegl-in <adegl-in@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/29 19:54:17 by nakoriko          #+#    #+#             */
-/*   Updated: 2026/03/30 08:20:53 by nakoriko         ###   ########.fr       */
+/*   Updated: 2026/04/03 12:41:37 by adegl-in         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,18 @@ bool isValidNickname(const std::string &nick) {
 	return true;
 }
 
-
 bool isValidChannelName(const std::string &channel) {
-		if(channel.empty())
+	if(channel.empty())
+		return false;
+	const std::string pref_ok = "#&+!";
+	if(pref_ok.find(channel[0]) == std::string::npos)
+		return false;
+	const std::string ko_chars = " ,\a\r\n\t";
+	for(size_t i = 1; i < channel.size(); i++) {
+		if(ko_chars.find(channel[i]) != std::string::npos)
 			return false;
-		const std::string pref_ok = "#&+!";
-		if(pref_ok.find(channel[0]) == std::string::npos)
-			return false;
-		const std::string ko_chars = " ,\a\r\n\t";
-		for(size_t i = 1; i < channel.size(); i++) {
-			if(ko_chars.find(channel[i]) != std::string::npos)
-				return false;
-		}
-		return true;
+	}
+	return true;
 }
 
 bool isValidFlag(const std::string &flag) {

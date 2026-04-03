@@ -1,64 +1,73 @@
+*This project has been created as part of the 42 curriculum by adegl-in, nakoriko, lemarino*
+
 # IRC Server - C++98
 
-A fully functional IRC server entirely implemented in C++98, with support for channels, private messages, and commands.
+## Description
 
-## What can it do?
+This project implements a fully functional **IRC (Internet Relay Chat) server** compliant with RFC 1459, entirely written in C++98.
 
-This project implements an IRC (Internet Relay Chat) server compliant with RFC 1459 with the following features:
+### What does the project teach?
 
-+ **Authentication**: PASS + NICK + USER system
-+ **Channels**: support for JOIN, PART, TOPIC
-+ **Messaging**: PRIVMSG (can also broadcast to other channels)
-+ **Operator Management**: INVITE, KICK, MODE
-+ **Connection**: non-blocking input and output thanks to poll()
+- To implement a real-time communication server following the IRC protocol standard
+- Adapt better with C++98 network programming and socket handling
+- Understand multi-client connection management using `poll()`
 
-## Machine and IDE requirements
+### Top features
 
-- C++98 or higher
-- g++
-- Linux/Unix
+- **Authentication System**: PASS + NICK + USER authentication workflow
+- **Channel Management**: support for JOIN, PART, TOPIC, and channel-specific operations
+- **Real-time Messaging**: PRIVMSG for private messages and channel broadcasts
+- **Operator Privileges**: INVITE, KICK, MODE commands for channel control
+- **Non-blocking I/O**: more efficient connection handling using `poll()` system call
+- **RFC 1459 Compliance**: full adherence to Internet Relay Chat (IRC) protocol standards
+- **Channel Modes**: support for +i (invite-only), +t (topic restricted), +k (key protected), +l (user limit), and +o (operator)
 
-## Compilation commands
+## INSTRUCTIONS
+
+### Requirements
+
+- **Language**: C++98
+- **Compiler**: g++
+- **Operating System**: Linux/Unix
+
+### Compilation
 
 ```bash
 make                # Compile the server
 make clean          # Remove object files
-make fclean         # Remove everything
+make fclean         # Remove all compiled files and objects
 make re             # Full recompilation
 ```
 
-### Output
+**Output**: Executable `ircserv`
 
-- **ircserv**: IRC server executable
+### EXECUTION
 
-## USAGE
-
-### Starting the server
+#### Starting the server
 
 ```bash
 ./ircserv <port> <password>
 ```
+
+**Parameters:**
+- `<port>`: the server listening port (must be between 1 and 65535)
+- `<password>`: the password required for client authentication
 
 **Example:**
 ```bash
 ./ircserv 6667 myPassword
 ```
 
-Remember that the port number must be between 1 and 65535, while the password is required for client authentication.
+#### Connecting with a client
 
-### Connecting with a client
-
-#### Tool 1: netcat (NC)
-
+**Option 1: netcat (simple terminal client)**
 ```bash
-bash -c 'nc localhost 6667'
+bash -c 'nc -C localhost 6667'
 ```
 
-#### Tool 2: irssi (graphical)
-
+**Option 2: irssi (GUI client)**
 ```bash
-irssi -c localhost -p 6667 -n nickname
-# Inside irssi: /quote PASS mypassword
+irssi -c localhost -p 6667 -w myPassword -n nickname
 ```
 
 ## SUPPORTED COMMANDS
@@ -90,10 +99,10 @@ irssi -c localhost -p 6667 -n nickname
 - `+i / -i`: invite-only channel
 - `+t / -t`: topic restricted to operators
 - `+k / -k`: channel protected by password
-- `+l <limit> / -l`: sser limit for channel
+- `+l <limit> / -l`: user limit for channel
 - `+o <nick> / -o <nick>`: grant/revoke operator
 
-## Project Structure
+## Project structure
 
 ```
 .
@@ -126,3 +135,19 @@ irssi -c localhost -p 6667 -n nickname
 ├── Makefile
 └── README.md
 ```
+
+## RESOURCES
+
+### Where we mostly got inspired
+
+- **RFC 1459**: [Internet Relay Chat Protocol](https://tools.ietf.org/html/rfc1459) - Official IRC protocol specification and standards
+- **POSIX poll()**: [System Call Documentation](https://pubs.opengroup.org/onlinepubs/9699919799/functions/poll.html)
+- **C++98 Standard**: Reference documentation for C++ language features and standard library
+
+### Was AI used for this project?
+
+AI was indeed used to develop the project, but only for learning purposes, specifically as follows:
+
+- **Protocol Compliance**: to ensure we used the correct IRC message formats and response codes
+- **Code Documentation**: to fasten the development of this README structure
+- **Debugging & Optimization**: to idenifty and resolve issues regarding the main aspects, such as socket handling, buffer management, and protocol compliance

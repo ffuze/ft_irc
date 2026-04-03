@@ -1,1 +1,0 @@
-g++ -Wall -Werror -Wextra -std=c++98 -Iinclude test_client.cpp ../srcs/Client.cpp -o test_client

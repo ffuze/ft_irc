@@ -6,7 +6,7 @@
 #    By: adegl-in <adegl-in@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/25 10:30:33 by nakoriko          #+#    #+#              #
-#    Updated: 2026/04/02 20:58:27 by adegl-in         ###   ########.fr        #
+#    Updated: 2026/04/03 12:47:10 by adegl-in         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,6 @@ SRCS = srcs/main.cpp srcs/Server.cpp srcs/Client.cpp srcs/CommandHandler.cpp \
 		srcs/commands/Mode.cpp srcs/commands/Topic.cpp \
 		\
 		srcs/Channel.cpp
-
-	
 
 OBJ = $(SRCS:.cpp=.o)
 

@@ -3,56 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alek <alek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: adegl-in <adegl-in@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 11:48:55 by nakoriko          #+#    #+#             */
-/*   Updated: 2026/04/02 00:13:58 by alek             ###   ########.fr       */
+/*   Updated: 2026/04/03 12:25:25 by adegl-in         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
-#define CLIENT_HPP
+# define CLIENT_HPP
 
-#include <string>
-#include <queue>
+# include <string>
+# include <queue>
 
 class Client {
-private:
-	int _fd; //use in map of clients
-	std::string _nickname;
-	std::string _username;
-	bool _registered; // autentification
-	bool _pass_checked;// autentification
-	std::string _read_buffer; //for read msgs by server
-	std::string _write_buffer; // for write msgs
-	std::queue<std::string> _pending_messages; // "fila di messaggi", to kkep the order(subject) 
+	private:
+		int _fd;
+		std::string _nickname;
+		std::string _username;
+		bool _registered;
+		bool _pass_checked;
+		std::string _read_buffer;
+		std::string _write_buffer;
+		std::queue<std::string> _pending_messages;
 
-public:
-	Client(int fd);
-	~Client();
-	void setNickname(std::string &nickname);
-	void setUsername(const std::string &username);
-	void setPassChecked(bool value);
-	void setRegistered(bool value);
-	bool isRegistered() const;
-	bool isPassChecked() const;
+	public:
+		Client(int fd);
+		~Client();
+		void setNickname(std::string &nickname);
+		void setUsername(const std::string &username);
+		void setPassChecked(bool value);
+		void setRegistered(bool value);
+		bool isRegistered() const;
+		bool isPassChecked() const;
 
-	std::string getNickname() const;
-	std::string getUsername() const;
-	int getFd() const; 
+		std::string getNickname() const;
+		std::string getUsername() const;
+		int getFd() const; 
 
-//for reading messages
-	void receiveMessage(std::string &row_msg); //add to _read_buffer
-	void parseMessages(); //parse readbuffer by \r\n -> put in _pending_messages;
-	bool hasPendingMessage();//checks_pending_messages
-	void extractFromPending(); // takes out from _pending_messages
-	std::string getNextMessage();
-//for sending messages
+		void receiveMessage(std::string &row_msg);
+		void parseMessages();
+		bool hasPendingMessage();
+		void extractFromPending();
+		std::string getNextMessage();
 
-	void sendMessage(const std::string &msg); // put to write_buffer
-	bool hasMessageToSend();// check _write_buffer
-	std::string extractToSend(); // extract for send method and removes from write_buffer;
-
+		void sendMessage(const std::string &msg);
+		bool hasMessageToSend();
+		std::string extractToSend();
 };
 
 #endif

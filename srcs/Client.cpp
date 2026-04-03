@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alek <alek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: adegl-in <adegl-in@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 16:51:18 by nakoriko          #+#    #+#             */
-/*   Updated: 2026/03/31 18:00:35 by nakoriko         ###   ########.fr       */
+/*   Updated: 2026/04/03 12:39:42 by adegl-in         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Client.hpp"
-
 
 Client::Client(int fd) : _fd(fd), _registered(false), _pass_checked(false) {}
 
@@ -43,7 +42,6 @@ bool Client::isPassChecked() const {
 	return _pass_checked;
 }
 
-
 std::string Client::getNickname() const{
 	return _nickname;
 }
@@ -61,24 +59,17 @@ void Client::receiveMessage(std::string &row_msg) {
 }
 
 void Client::parseMessages() {
-	//il protocollo IRC prevede \r\n come il divider dei messaggi
-	//senza \r\n - il messaggio rimane dentro buffer, finche non va completato
-	
-	//check dentro buffer si trovano \r \n (il messaggio completo)
-	//se trovato msg - lo mettiamo in fila, eliminando dal buffer
-	//continuamo
 	size_t pos;
 	pos = _read_buffer.find("\r\n");
-	while(pos != std::string::npos) {
+	while (pos != std::string::npos) {
 		std::string msg = _read_buffer.substr(0, pos);
 		_pending_messages.push(msg);
-		_read_buffer.erase(0, pos+2); //eliminiamo insieme con \r\n
+		_read_buffer.erase(0, pos+2);
 		pos = _read_buffer.find("\r\n");
 	}
 }
 
 bool Client::hasPendingMessage() {
-	//check inside our std::queue
 	return !_pending_messages.empty();
 }
 
@@ -87,18 +78,14 @@ void Client::extractFromPending() {
 		_pending_messages.pop();
 }
 
-
-//mettiamo il messaggio dentro buffer_write
 void Client::sendMessage(const std::string &msg) {
 	_write_buffer = _write_buffer + msg;
 }
 
-//se ci sono - li aggingiamo in POLLOUT dopo
 bool Client::hasMessageToSend() {
 	return!_write_buffer.empty();
 }
 
-//prendiamo il massaggio per inviare, ed eliminiamo dal buffer _write
 std::string Client::extractToSend () {
 	std::string data_to_send = _write_buffer;
 	_write_buffer.clear();
